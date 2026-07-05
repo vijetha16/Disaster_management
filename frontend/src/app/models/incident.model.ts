@@ -1,4 +1,6 @@
 // src/app/models/incident.model.ts
+import { Person } from './person.model';
+
 export interface Incident {
     id?: number;
     type: string;

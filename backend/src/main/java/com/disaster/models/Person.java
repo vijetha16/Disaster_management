@@ -45,4 +45,76 @@ public class Person {
     protected void onCreate() {
         lastUpdated = LocalDateTime.now();
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Long getIncidentId() {
+        return incidentId;
+    }
+
+    public void setIncidentId(Long incidentId) {
+        this.incidentId = incidentId;
+    }
+
+    public String getContactNumber() {
+        return contactNumber;
+    }
+
+    public void setContactNumber(String contactNumber) {
+        this.contactNumber = contactNumber;
+    }
+
+    public LocalDateTime getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(LocalDateTime lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+
+    public Boolean getIsOfflineSync() {
+        return isOfflineSync;
+    }
+
+    public void setIsOfflineSync(Boolean isOfflineSync) {
+        this.isOfflineSync = isOfflineSync;
+    }
 }

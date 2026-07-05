@@ -46,7 +46,7 @@ public class Incident {
     @Column(name = "affected_area_radius")
     private Double affectedAreaRadius; // in kilometers
     
-    @OneToMany(mappedBy = "incidentId", cascade = CascadeType.ALL)
+    @Transient
     private List<Person> affectedPersons = new ArrayList<>();
     
     @PrePersist
@@ -55,5 +55,93 @@ public class Incident {
         if (status == null) {
             status = "Active";
         }
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getSeverity() {
+        return severity;
+    }
+
+    public void setSeverity(String severity) {
+        this.severity = severity;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getReportedBy() {
+        return reportedBy;
+    }
+
+    public void setReportedBy(String reportedBy) {
+        this.reportedBy = reportedBy;
+    }
+
+    public LocalDateTime getReportedTime() {
+        return reportedTime;
+    }
+
+    public void setReportedTime(LocalDateTime reportedTime) {
+        this.reportedTime = reportedTime;
+    }
+
+    public Double getHazardLevel() {
+        return hazardLevel;
+    }
+
+    public void setHazardLevel(Double hazardLevel) {
+        this.hazardLevel = hazardLevel;
+    }
+
+    public Double getAffectedAreaRadius() {
+        return affectedAreaRadius;
+    }
+
+    public void setAffectedAreaRadius(Double affectedAreaRadius) {
+        this.affectedAreaRadius = affectedAreaRadius;
+    }
+
+    public List<Person> getAffectedPersons() {
+        return affectedPersons;
+    }
+
+    public void setAffectedPersons(List<Person> affectedPersons) {
+        this.affectedPersons = affectedPersons;
     }
 }

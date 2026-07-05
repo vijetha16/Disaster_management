@@ -1,0 +1,33 @@
+.incident-container {
+  padding: 24px;
+}
+
+.incident-form {
+  margin-bottom: 24px;
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.form-row input,
+.form-row select,
+.form-row button {
+  min-height: 40px;
+  padding: 8px 10px;
+}
+
+.incident-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.incident-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  background: #fff;
+}

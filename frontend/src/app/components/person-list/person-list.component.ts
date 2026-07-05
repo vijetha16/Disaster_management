@@ -1,10 +1,14 @@
 // src/app/components/person-list/person-list.component.ts
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { PersonService } from '../../services/person.service';
 import { Person, PERSON_STATUSES } from '../../models/person.model';
 
 @Component({
     selector: 'app-person-list',
+    standalone: true,
+    imports: [CommonModule, FormsModule],
     templateUrl: './person-list.component.html',
     styleUrls: ['./person-list.component.css']
 })

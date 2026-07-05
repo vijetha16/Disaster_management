@@ -48,17 +48,17 @@
     </div>
 
     <!-- Edit Modal -->
-    <div *ngIf="editingPerson" class="modal-overlay">
+    <div *ngIf="editingPerson as person" class="modal-overlay">
         <div class="modal">
             <h2>Edit Person</h2>
             <div class="modal-form">
-                <input [(ngModel)]="editingPerson.name" placeholder="Name">
-                <input type="number" [(ngModel)]="editingPerson.age" placeholder="Age">
-                <input [(ngModel)]="editingPerson.location" placeholder="Location">
-                <select [(ngModel)]="editingPerson.status">
+                <input [(ngModel)]="person.name" placeholder="Name">
+                <input type="number" [(ngModel)]="person.age" placeholder="Age">
+                <input [(ngModel)]="person.location" placeholder="Location">
+                <select [(ngModel)]="person.status">
                     <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
                 </select>
-                <input [(ngModel)]="editingPerson.contactNumber" placeholder="Contact Number">
+                <input [(ngModel)]="person.contactNumber" placeholder="Contact Number">
             </div>
             <div class="modal-actions">
                 <button (click)="saveEdit()" class="btn-save">Save</button>

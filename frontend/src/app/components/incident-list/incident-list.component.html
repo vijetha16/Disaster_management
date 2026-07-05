@@ -1,0 +1,35 @@
+<div class="incident-container">
+  <h1>Incident Management</h1>
+
+  <div class="incident-form">
+    <h2>Add New Incident</h2>
+    <div class="form-row">
+      <select [(ngModel)]="newIncident.type">
+        <option *ngFor="let type of incidentTypes" [value]="type">{{ type }}</option>
+      </select>
+      <input [(ngModel)]="newIncident.description" placeholder="Description">
+      <input [(ngModel)]="newIncident.location" placeholder="Location">
+      <select [(ngModel)]="newIncident.severity">
+        <option *ngFor="let severity of severities" [value]="severity">{{ severity }}</option>
+      </select>
+      <select [(ngModel)]="newIncident.status">
+        <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
+      </select>
+      <button (click)="addIncident()">Add Incident</button>
+    </div>
+  </div>
+
+  <div class="incident-grid">
+    <article *ngFor="let incident of incidents" class="incident-card">
+      <div>
+        <h3>{{ incident.type }}</h3>
+        <p>{{ incident.description }}</p>
+        <p><strong>Location:</strong> {{ incident.location }}</p>
+        <p><strong>Severity:</strong> {{ incident.severity }}</p>
+        <p><strong>Status:</strong> {{ incident.status }}</p>
+        <p *ngIf="incident.hazardLevel"><strong>Hazard Level:</strong> {{ incident.hazardLevel }}</p>
+      </div>
+      <button *ngIf="incident.id" (click)="deleteIncident(incident.id)">Delete</button>
+    </article>
+  </div>
+</div>
