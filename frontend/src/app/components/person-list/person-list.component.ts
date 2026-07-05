@@ -23,6 +23,8 @@ export class PersonListComponent implements OnInit, OnDestroy {
     selectedStatus = '';
     selectedIncident = '';
     searchTerm = '';
+    locationSearchTerm = '';
+    activeLocationSearch = '';
     editingPerson: Person | null = null;
     autoRefresh = true;
     lastUpdated = '';
@@ -137,17 +139,30 @@ export class PersonListComponent implements OnInit, OnDestroy {
 
     applyFilters() {
         const term = this.searchTerm.trim().toLowerCase();
+        const locationTerm = this.activeLocationSearch.trim().toLowerCase();
         const incidentId = this.selectedIncident ? Number(this.selectedIncident) : null;
 
         this.filteredPersons = this.persons
             .filter(person => !this.selectedStatus || person.status === this.selectedStatus)
             .filter(person => !incidentId || person.incidentId === incidentId)
+            .filter(person => !locationTerm || person.location.toLowerCase().includes(locationTerm))
             .filter(person => !term ||
                 person.name.toLowerCase().includes(term) ||
                 person.location.toLowerCase().includes(term) ||
                 (person.contactNumber || '').toLowerCase().includes(term)
             )
             .sort((a, b) => a.status.localeCompare(b.status) || a.name.localeCompare(b.name));
+    }
+
+    searchByLocation() {
+        this.activeLocationSearch = this.locationSearchTerm;
+        this.applyFilters();
+    }
+
+    clearLocationSearch() {
+        this.locationSearchTerm = '';
+        this.activeLocationSearch = '';
+        this.applyFilters();
     }
 
     getIncidentLabel(incidentId?: number): string {

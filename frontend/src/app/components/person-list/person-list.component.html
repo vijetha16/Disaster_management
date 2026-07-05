@@ -35,6 +35,9 @@
 
     <section class="filters">
         <input [(ngModel)]="searchTerm" (ngModelChange)="applyFilters()" placeholder="Search name, location, or contact">
+        <input [(ngModel)]="locationSearchTerm" (keyup.enter)="searchByLocation()" placeholder="Search location only">
+        <button type="button" (click)="searchByLocation()">Search Location</button>
+        <button type="button" class="secondary" (click)="clearLocationSearch()">Clear Location</button>
         <select [(ngModel)]="selectedStatus" (ngModelChange)="applyFilters()">
             <option value="">All statuses</option>
             <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>

@@ -21,6 +21,8 @@ export class IncidentListComponent implements OnInit, OnDestroy {
   selectedStatus = '';
   selectedSeverity = '';
   searchTerm = '';
+  locationSearchTerm = '';
+  activeLocationSearch = '';
   autoRefresh = true;
   lastUpdated = '';
   errorMessage = '';
@@ -98,15 +100,28 @@ export class IncidentListComponent implements OnInit, OnDestroy {
 
   applyFilters() {
     const term = this.searchTerm.trim().toLowerCase();
+    const locationTerm = this.activeLocationSearch.trim().toLowerCase();
     this.filteredIncidents = this.incidents
       .filter(incident => !this.selectedStatus || incident.status === this.selectedStatus)
       .filter(incident => !this.selectedSeverity || incident.severity === this.selectedSeverity)
+      .filter(incident => !locationTerm || incident.location.toLowerCase().includes(locationTerm))
       .filter(incident => !term ||
         incident.type.toLowerCase().includes(term) ||
         incident.location.toLowerCase().includes(term) ||
         incident.description.toLowerCase().includes(term)
       )
       .sort((a, b) => (b.hazardLevel || 0) - (a.hazardLevel || 0));
+  }
+
+  searchByLocation() {
+    this.activeLocationSearch = this.locationSearchTerm;
+    this.applyFilters();
+  }
+
+  clearLocationSearch() {
+    this.locationSearchTerm = '';
+    this.activeLocationSearch = '';
+    this.applyFilters();
   }
 
   getSeverityClass(severity: string): string {
