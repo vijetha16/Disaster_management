@@ -49,3 +49,21 @@
     max-width: 1400px;
     margin: 0 auto;
 }
+
+.page-intro {
+    margin-bottom: 20px;
+    padding: 16px 20px;
+    border: 1px solid #d8e2eb;
+    border-radius: 8px;
+    background: #f7fafc;
+}
+
+.page-intro h2 {
+    margin: 0 0 6px;
+    color: #1f2937;
+}
+
+.page-intro p {
+    margin: 0;
+    color: #4b5563;
+}

@@ -1,18 +1,20 @@
 <div class="app-container">
-    <!-- Navigation Bar -->
     <nav class="navbar">
         <div class="nav-brand">
-            <h1>🚨 Disaster Management System</h1>
+            <h1>Disaster Management System</h1>
         </div>
         <div class="nav-links">
-            <a routerLink="/dashboard" routerLinkActive="active">📊 Dashboard</a>
-            <a routerLink="/persons" routerLinkActive="active">👥 Persons</a>
-            <a routerLink="/incidents" routerLinkActive="active">📋 Incidents</a>
+            <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+            <a routerLink="/persons" routerLinkActive="active">Persons</a>
+            <a routerLink="/incidents" routerLinkActive="active">Incidents</a>
         </div>
     </nav>
 
-    <!-- Content Area -->
     <div class="content">
+        <section class="page-intro">
+            <h2>Dashboard</h2>
+            <p>Backend and frontend are connected. Use the tabs above to manage incidents and affected persons.</p>
+        </section>
         <router-outlet></router-outlet>
     </div>
 </div>
