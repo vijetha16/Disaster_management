@@ -1,62 +1,102 @@
-<!-- src/app/components/dashboard/dashboard.component.html -->
 <div class="dashboard-container">
-    <h1>Disaster Management Dashboard</h1>
-    
-    <div class="stats-grid">
-        <div class="stat-card">
-            <div class="stat-icon">📋</div>
-            <div class="stat-info">
-                <h3>Total Incidents</h3>
-                <p class="stat-number">{{ stats.totalIncidents }}</p>
-            </div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon">🔴</div>
-            <div class="stat-info">
-                <h3>Active Incidents</h3>
-                <p class="stat-number">{{ stats.activeIncidents }}</p>
-            </div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon">👥</div>
-            <div class="stat-info">
-                <h3>Total Persons</h3>
-                <p class="stat-number">{{ stats.totalPersons }}</p>
-            </div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon">🔍</div>
-            <div class="stat-info">
-                <h3>Missing Persons</h3>
-                <p class="stat-number">{{ stats.missingPersons }}</p>
-            </div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon">⚠️</div>
-            <div class="stat-info">
-                <h3>Critical Incidents</h3>
-                <p class="stat-number">{{ stats.criticalIncidents }}</p>
-            </div>
-        </div>
+  <div class="dashboard-header">
+    <div>
+      <p class="eyebrow">Live operations</p>
+      <h1>Disaster Response Dashboard</h1>
+      <p class="muted">Auto refreshes every 5 seconds while the backend is running.</p>
     </div>
+    <div class="refresh-panel">
+      <span>Last update: {{ lastUpdated || 'Waiting...' }}</span>
+      <label>
+        <input type="checkbox" [(ngModel)]="autoRefresh">
+        Auto refresh
+      </label>
+      <button type="button" (click)="loadData()">Refresh</button>
+    </div>
+  </div>
 
-    <div class="active-incidents-section">
-        <h2>Recent Active Incidents</h2>
-        <div class="incident-list">
-            <div *ngFor="let incident of activeIncidents" class="incident-item">
-                <div class="incident-header">
-                    <span class="incident-type">{{ incident.type }}</span>
-                    <span class="incident-severity" [class]="getSeverityClass(incident.severity)">
-                        {{ incident.severity }}
-                    </span>
-                </div>
-                <div class="incident-details">
-                    <p><strong>Location:</strong> {{ incident.location }}</p>
-                    <p><strong>Status:</strong> {{ incident.status }}</p>
-                    <p><strong>Reported By:</strong> {{ incident.reportedBy }}</p>
-                    <p *ngIf="incident.hazardLevel"><strong>Hazard Level:</strong> {{ incident.hazardLevel | number:'1.1-1' }}</p>
-                </div>
-            </div>
-        </div>
+  <div *ngIf="errorMessage" class="alert">{{ errorMessage }}</div>
+
+  <section class="risk-banner" [class.critical]="getRiskLevel() === 'Critical'" [class.high]="getRiskLevel() === 'High'">
+    <div>
+      <span class="label">Current risk level</span>
+      <strong>{{ getRiskLevel() }}</strong>
     </div>
+    <p>{{ incidentSummary.active }} active incidents, {{ personSummary.missing }} missing, {{ personSummary.injured }} injured.</p>
+  </section>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <span class="stat-label">Total Incidents</span>
+      <strong>{{ incidentSummary.total }}</strong>
+      <small>{{ incidentSummary.active }} active</small>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Critical Incidents</span>
+      <strong>{{ incidentSummary.critical }}</strong>
+      <small>{{ incidentSummary.high }} high priority</small>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">People Tracked</span>
+      <strong>{{ personSummary.total }}</strong>
+      <small>{{ personSummary.safe }} safe</small>
+    </div>
+    <div class="stat-card danger">
+      <span class="stat-label">Needs Attention</span>
+      <strong>{{ personSummary.missing + personSummary.injured }}</strong>
+      <small>{{ personSummary.deceased }} deceased</small>
+    </div>
+  </div>
+
+  <div class="dashboard-grid">
+    <section class="panel">
+      <div class="panel-header">
+        <h2>Priority Incidents</h2>
+        <span *ngIf="loading">Updating...</span>
+      </div>
+      <div *ngIf="activeIncidents.length === 0" class="empty-state">No active incidents right now.</div>
+      <article *ngFor="let incident of activeIncidents" class="incident-item">
+        <div class="incident-main">
+          <div>
+            <h3>{{ incident.type }} in {{ incident.location }}</h3>
+            <p>{{ incident.description }}</p>
+          </div>
+          <span class="severity-pill" [class]="getSeverityClass(incident.severity)">
+            {{ incident.severity }}
+          </span>
+        </div>
+        <div class="incident-meta">
+          <span>Status: {{ incident.status }}</span>
+          <span>Hazard: {{ incident.hazardLevel || 0 }}</span>
+          <span>Reported by: {{ incident.reportedBy || 'Unknown' }}</span>
+        </div>
+        <div class="quick-actions">
+          <button type="button" (click)="setIncidentStatus(incident, 'Under Assessment')">Assess</button>
+          <button type="button" (click)="setIncidentStatus(incident, 'Resolved')">Resolve</button>
+        </div>
+      </article>
+    </section>
+
+    <section class="panel">
+      <h2>People Status</h2>
+      <div class="status-bars">
+        <div>
+          <span>Safe</span>
+          <strong>{{ personSummary.safe }}</strong>
+        </div>
+        <div>
+          <span>Missing</span>
+          <strong>{{ personSummary.missing }}</strong>
+        </div>
+        <div>
+          <span>Injured</span>
+          <strong>{{ personSummary.injured }}</strong>
+        </div>
+        <div>
+          <span>Deceased</span>
+          <strong>{{ personSummary.deceased }}</strong>
+        </div>
+      </div>
+    </section>
+  </div>
 </div>

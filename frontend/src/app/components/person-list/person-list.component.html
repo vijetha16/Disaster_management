@@ -1,68 +1,102 @@
-<!-- src/app/components/person-list/person-list.component.html -->
 <div class="person-container">
-    <h1>Affected Persons Management</h1>
-    
-    <div class="add-person-form">
-        <h2>Add New Person</h2>
-        <div class="form-row">
-            <input [(ngModel)]="newPerson.name" placeholder="Name" required>
-            <input type="number" [(ngModel)]="newPerson.age" placeholder="Age" required>
-            <input [(ngModel)]="newPerson.location" placeholder="Location" required>
-            <select [(ngModel)]="newPerson.status">
-                <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
-            </select>
-            <input [(ngModel)]="newPerson.contactNumber" placeholder="Contact Number">
-            <button (click)="addPerson()" class="btn-add">Add Person</button>
+    <div class="page-header">
+        <div>
+            <h1>People Tracking</h1>
+            <p>Register affected people, assign them to active incidents, and update status quickly.</p>
+        </div>
+        <div class="live-tools">
+            <span>Updated {{ lastUpdated || 'never' }}</span>
+            <label><input type="checkbox" [(ngModel)]="autoRefresh"> Auto refresh</label>
+            <button type="button" (click)="loadAll()">Refresh</button>
         </div>
     </div>
 
-    <div class="filters">
-        <input [(ngModel)]="searchTerm" (ngModelChange)="applyFilters()" 
-               placeholder="Search by name or location..." class="search-input">
-        <select [(ngModel)]="selectedStatus" (ngModelChange)="applyFilters()" class="filter-select">
-            <option value="">All Statuses</option>
+    <div *ngIf="errorMessage" class="alert">{{ errorMessage }}</div>
+
+    <section class="add-person-form">
+        <h2>Add Person</h2>
+        <div class="form-grid">
+            <input [(ngModel)]="newPerson.name" placeholder="Name" required>
+            <input type="number" min="0" [(ngModel)]="newPerson.age" placeholder="Age" required>
+            <input [(ngModel)]="newPerson.location" placeholder="Current location" required>
+            <select [(ngModel)]="newPerson.status">
+                <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
+            </select>
+            <select [(ngModel)]="newPerson.incidentId">
+                <option [ngValue]="undefined">Unassigned</option>
+                <option *ngFor="let incident of incidents" [ngValue]="incident.id">
+                    {{ incident.type }} - {{ incident.location }}
+                </option>
+            </select>
+            <input [(ngModel)]="newPerson.contactNumber" placeholder="Contact number">
+            <button type="button" (click)="addPerson()">Add Person</button>
+        </div>
+    </section>
+
+    <section class="filters">
+        <input [(ngModel)]="searchTerm" (ngModelChange)="applyFilters()" placeholder="Search name, location, or contact">
+        <select [(ngModel)]="selectedStatus" (ngModelChange)="applyFilters()">
+            <option value="">All statuses</option>
             <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
         </select>
-    </div>
+        <select [(ngModel)]="selectedIncident" (ngModelChange)="applyFilters()">
+            <option value="">All incidents</option>
+            <option *ngFor="let incident of incidents" [value]="incident.id">
+                {{ incident.type }} - {{ incident.location }}
+            </option>
+        </select>
+    </section>
 
     <div class="person-grid">
-        <div *ngFor="let person of filteredPersons" class="person-card">
+        <article *ngFor="let person of filteredPersons" class="person-card">
             <div class="person-header">
-                <h3>{{ person.name }}</h3>
+                <div>
+                    <h3>{{ person.name }}</h3>
+                    <p>{{ person.location }}</p>
+                </div>
                 <span class="status-badge" [style.background]="getStatusColor(person.status)">
                     {{ person.status }}
                 </span>
             </div>
-            <div class="person-details">
-                <p><strong>Age:</strong> {{ person.age }}</p>
-                <p><strong>Location:</strong> {{ person.location }}</p>
-                <p *ngIf="person.contactNumber"><strong>Contact:</strong> {{ person.contactNumber }}</p>
-                <p *ngIf="person.incidentId"><strong>Incident ID:</strong> {{ person.incidentId }}</p>
-                <p *ngIf="person.lastUpdated"><strong>Last Updated:</strong> {{ person.lastUpdated | date:'medium' }}</p>
-            </div>
+            <dl>
+                <div><dt>Age</dt><dd>{{ person.age }}</dd></div>
+                <div><dt>Incident</dt><dd>{{ getIncidentLabel(person.incidentId) }}</dd></div>
+                <div><dt>Contact</dt><dd>{{ person.contactNumber || 'Not provided' }}</dd></div>
+                <div><dt>Updated</dt><dd>{{ person.lastUpdated ? (person.lastUpdated | date:'short') : 'Pending' }}</dd></div>
+            </dl>
             <div class="person-actions">
-                <button (click)="startEdit(person)" class="btn-edit">Edit</button>
-                <button (click)="deletePerson(person.id!)" class="btn-delete">Delete</button>
+                <button type="button" (click)="setStatus(person, 'Safe')">Safe</button>
+                <button type="button" (click)="setStatus(person, 'Missing')">Missing</button>
+                <button type="button" (click)="setStatus(person, 'Injured')">Injured</button>
+                <button type="button" (click)="startEdit(person)">Edit</button>
+                <button type="button" class="danger" (click)="deletePerson(person.id!)">Delete</button>
             </div>
-        </div>
+        </article>
     </div>
 
-    <!-- Edit Modal -->
+    <div *ngIf="filteredPersons.length === 0" class="empty-state">No people match the current filters.</div>
+
     <div *ngIf="editingPerson as person" class="modal-overlay">
         <div class="modal">
             <h2>Edit Person</h2>
             <div class="modal-form">
                 <input [(ngModel)]="person.name" placeholder="Name">
-                <input type="number" [(ngModel)]="person.age" placeholder="Age">
+                <input type="number" min="0" [(ngModel)]="person.age" placeholder="Age">
                 <input [(ngModel)]="person.location" placeholder="Location">
                 <select [(ngModel)]="person.status">
                     <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
                 </select>
+                <select [(ngModel)]="person.incidentId">
+                    <option [ngValue]="undefined">Unassigned</option>
+                    <option *ngFor="let incident of incidents" [ngValue]="incident.id">
+                        {{ incident.type }} - {{ incident.location }}
+                    </option>
+                </select>
                 <input [(ngModel)]="person.contactNumber" placeholder="Contact Number">
             </div>
             <div class="modal-actions">
-                <button (click)="saveEdit()" class="btn-save">Save</button>
-                <button (click)="cancelEdit()" class="btn-cancel">Cancel</button>
+                <button type="button" (click)="saveEdit()">Save</button>
+                <button type="button" class="secondary" (click)="cancelEdit()">Cancel</button>
             </div>
         </div>
     </div>

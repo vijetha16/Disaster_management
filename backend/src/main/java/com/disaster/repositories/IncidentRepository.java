@@ -19,4 +19,10 @@ public interface IncidentRepository extends JpaRepository<Incident, Long> {
     
     @Query("SELECT i FROM Incident i ORDER BY i.hazardLevel DESC")
     List<Incident> findAllOrderByHazardLevelDesc();
+
+    List<Incident> findTop5ByOrderByReportedTimeDesc();
+
+    long countByStatus(String status);
+
+    long countBySeverity(String severity);
 }

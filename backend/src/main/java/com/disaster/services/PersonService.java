@@ -6,7 +6,10 @@ import com.disaster.repositories.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -26,6 +29,7 @@ public class PersonService {
     
     public Person createPerson(Person person) {
         person.setIsOfflineSync(false);
+        person.setLastUpdated(LocalDateTime.now());
         return personRepository.save(person);
     }
     
@@ -39,7 +43,17 @@ public class PersonService {
         person.setStatus(personDetails.getStatus());
         person.setIncidentId(personDetails.getIncidentId());
         person.setContactNumber(personDetails.getContactNumber());
+        person.setLastUpdated(LocalDateTime.now());
         
+        return personRepository.save(person);
+    }
+
+    public Person updatePersonStatus(Long id, String status) {
+        Person person = personRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Person not found"));
+
+        person.setStatus(status);
+        person.setLastUpdated(LocalDateTime.now());
         return personRepository.save(person);
     }
     
@@ -57,5 +71,15 @@ public class PersonService {
     
     public Long getPersonCountByStatus(String status) {
         return personRepository.countByStatus(status);
+    }
+
+    public Map<String, Object> getPersonSummary() {
+        Map<String, Object> summary = new HashMap<>();
+        summary.put("total", personRepository.count());
+        summary.put("safe", personRepository.countByStatus("Safe"));
+        summary.put("missing", personRepository.countByStatus("Missing"));
+        summary.put("injured", personRepository.countByStatus("Injured"));
+        summary.put("deceased", personRepository.countByStatus("Deceased"));
+        return summary;
     }
 }

@@ -1,35 +1,74 @@
 <div class="incident-container">
-  <h1>Incident Management</h1>
-
-  <div class="incident-form">
-    <h2>Add New Incident</h2>
-    <div class="form-row">
-      <select [(ngModel)]="newIncident.type">
-        <option *ngFor="let type of incidentTypes" [value]="type">{{ type }}</option>
-      </select>
-      <input [(ngModel)]="newIncident.description" placeholder="Description">
-      <input [(ngModel)]="newIncident.location" placeholder="Location">
-      <select [(ngModel)]="newIncident.severity">
-        <option *ngFor="let severity of severities" [value]="severity">{{ severity }}</option>
-      </select>
-      <select [(ngModel)]="newIncident.status">
-        <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
-      </select>
-      <button (click)="addIncident()">Add Incident</button>
+  <div class="page-header">
+    <div>
+      <h1>Incident Command</h1>
+      <p>Track hazards, triage priority, and update response status in near real time.</p>
+    </div>
+    <div class="live-tools">
+      <span>Updated {{ lastUpdated || 'never' }}</span>
+      <label><input type="checkbox" [(ngModel)]="autoRefresh"> Auto refresh</label>
+      <button type="button" (click)="loadIncidents()">Refresh</button>
     </div>
   </div>
 
+  <div *ngIf="errorMessage" class="alert">{{ errorMessage }}</div>
+
+  <section class="incident-form">
+    <h2>Report Incident</h2>
+    <div class="form-grid">
+      <select [(ngModel)]="newIncident.type">
+        <option *ngFor="let type of incidentTypes" [value]="type">{{ type }}</option>
+      </select>
+      <select [(ngModel)]="newIncident.severity">
+        <option *ngFor="let severity of severities" [value]="severity">{{ severity }}</option>
+      </select>
+      <input [(ngModel)]="newIncident.location" placeholder="Location">
+      <input [(ngModel)]="newIncident.reportedBy" placeholder="Reported by">
+      <input type="number" min="0" [(ngModel)]="newIncident.affectedAreaRadius" placeholder="Affected radius km">
+      <select [(ngModel)]="newIncident.status">
+        <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
+      </select>
+      <textarea [(ngModel)]="newIncident.description" placeholder="Situation description"></textarea>
+      <button type="button" (click)="addIncident()">Create Incident</button>
+    </div>
+  </section>
+
+  <section class="filters">
+    <input [(ngModel)]="searchTerm" (ngModelChange)="applyFilters()" placeholder="Search type, location, or description">
+    <select [(ngModel)]="selectedStatus" (ngModelChange)="applyFilters()">
+      <option value="">All statuses</option>
+      <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
+    </select>
+    <select [(ngModel)]="selectedSeverity" (ngModelChange)="applyFilters()">
+      <option value="">All severity levels</option>
+      <option *ngFor="let severity of severities" [value]="severity">{{ severity }}</option>
+    </select>
+  </section>
+
   <div class="incident-grid">
-    <article *ngFor="let incident of incidents" class="incident-card">
-      <div>
-        <h3>{{ incident.type }}</h3>
-        <p>{{ incident.description }}</p>
-        <p><strong>Location:</strong> {{ incident.location }}</p>
-        <p><strong>Severity:</strong> {{ incident.severity }}</p>
-        <p><strong>Status:</strong> {{ incident.status }}</p>
-        <p *ngIf="incident.hazardLevel"><strong>Hazard Level:</strong> {{ incident.hazardLevel }}</p>
+    <article *ngFor="let incident of filteredIncidents" class="incident-card">
+      <div class="card-top">
+        <div>
+          <h3>{{ incident.type }}</h3>
+          <p>{{ incident.location }}</p>
+        </div>
+        <span class="severity-pill" [class]="getSeverityClass(incident.severity)">{{ incident.severity }}</span>
       </div>
-      <button *ngIf="incident.id" (click)="deleteIncident(incident.id)">Delete</button>
+      <p class="description">{{ incident.description }}</p>
+      <dl>
+        <div><dt>Status</dt><dd>{{ incident.status }}</dd></div>
+        <div><dt>Hazard</dt><dd>{{ incident.hazardLevel || 0 }}</dd></div>
+        <div><dt>Radius</dt><dd>{{ incident.affectedAreaRadius || 0 }} km</dd></div>
+        <div><dt>Reporter</dt><dd>{{ incident.reportedBy || 'Unknown' }}</dd></div>
+      </dl>
+      <div class="card-actions">
+        <button type="button" (click)="setStatus(incident, 'Active')">Activate</button>
+        <button type="button" (click)="setStatus(incident, 'Under Assessment')">Assess</button>
+        <button type="button" (click)="setStatus(incident, 'Resolved')">Resolve</button>
+        <button *ngIf="incident.id" type="button" class="danger" (click)="deleteIncident(incident.id)">Delete</button>
+      </div>
     </article>
   </div>
+
+  <div *ngIf="filteredIncidents.length === 0" class="empty-state">No incidents match the current filters.</div>
 </div>

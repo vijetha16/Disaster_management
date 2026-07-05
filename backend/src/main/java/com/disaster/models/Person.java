@@ -46,6 +46,11 @@ public class Person {
         lastUpdated = LocalDateTime.now();
     }
 
+    @PreUpdate
+    protected void onUpdate() {
+        lastUpdated = LocalDateTime.now();
+    }
+
     public Long getId() {
         return id;
     }

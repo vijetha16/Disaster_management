@@ -10,9 +10,20 @@ export interface Incident {
     status: string;
     reportedBy: string;
     reportedTime?: Date;
+    lastUpdated?: Date;
     hazardLevel?: number;
     affectedAreaRadius?: number;
     affectedPersons?: Person[];
+}
+
+export interface IncidentSummary {
+    total: number;
+    active: number;
+    resolved: number;
+    underAssessment: number;
+    critical: number;
+    high: number;
+    recent: Incident[];
 }
 
 export const INCIDENT_TYPES = ['Earthquake', 'Flood', 'Cyclone', 'Fire', 'Landslide', 'Tsunami'] as const;

@@ -8,10 +8,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/persons")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = {"http://localhost:4200", "http://127.0.0.1:4200"})
 public class PersonController {
     
     @Autowired
@@ -38,6 +39,11 @@ public class PersonController {
     public ResponseEntity<List<Person>> getPersonsByStatus(@PathVariable String status) {
         return ResponseEntity.ok(personService.getPersonsByStatus(status));
     }
+
+    @GetMapping("/summary")
+    public ResponseEntity<Map<String, Object>> getPersonSummary() {
+        return ResponseEntity.ok(personService.getPersonSummary());
+    }
     
     @PostMapping
     public ResponseEntity<Person> createPerson(@RequestBody Person person) {
@@ -47,6 +53,11 @@ public class PersonController {
     @PutMapping("/{id}")
     public ResponseEntity<Person> updatePerson(@PathVariable Long id, @RequestBody Person person) {
         return ResponseEntity.ok(personService.updatePerson(id, person));
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<Person> updatePersonStatus(@PathVariable Long id, @RequestBody Map<String, String> body) {
+        return ResponseEntity.ok(personService.updatePersonStatus(id, body.get("status")));
     }
     
     @DeleteMapping("/{id}")

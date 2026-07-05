@@ -19,4 +19,6 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
     
     @Query("SELECT COUNT(p) FROM Person p WHERE p.status = :status")
     Long countByStatus(@Param("status") String status);
+
+    long countByIncidentId(Long incidentId);
 }

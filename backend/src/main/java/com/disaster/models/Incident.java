@@ -39,6 +39,9 @@ public class Incident {
     
     @Column(name = "reported_time")
     private LocalDateTime reportedTime;
+
+    @Column(name = "last_updated")
+    private LocalDateTime lastUpdated;
     
     @Column(name = "hazard_level")
     private Double hazardLevel; // Calculated multi-hazard score
@@ -52,9 +55,15 @@ public class Incident {
     @PrePersist
     protected void onCreate() {
         reportedTime = LocalDateTime.now();
+        lastUpdated = LocalDateTime.now();
         if (status == null) {
             status = "Active";
         }
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        lastUpdated = LocalDateTime.now();
     }
 
     public Long getId() {
@@ -119,6 +128,14 @@ public class Incident {
 
     public void setReportedTime(LocalDateTime reportedTime) {
         this.reportedTime = reportedTime;
+    }
+
+    public LocalDateTime getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(LocalDateTime lastUpdated) {
+        this.lastUpdated = lastUpdated;
     }
 
     public Double getHazardLevel() {
