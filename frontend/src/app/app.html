@@ -1,20 +1,51 @@
-<div class="app-container">
-    <nav class="navbar">
-        <div class="nav-brand">
-            <h1>Disaster Management System</h1>
-        </div>
-        <div class="nav-links">
-            <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
-            <a routerLink="/persons" routerLinkActive="active">Persons</a>
-            <a routerLink="/incidents" routerLinkActive="active">Incidents</a>
-        </div>
-    </nav>
+<div class="app-shell">
+    <aside class="sidebar">
+        <a class="brand" routerLink="/dashboard" aria-label="ResQ Command dashboard">
+            <img src="/resq-logo.svg" alt="ResQ Command logo">
+            <span>
+                <strong>ResQ Command</strong>
+                <small>Disaster Operations</small>
+            </span>
+        </a>
 
-    <div class="content">
-        <section class="page-intro">
-            <h2>Dashboard</h2>
-            <p>Backend and frontend are connected. Use the tabs above to manage incidents and affected persons.</p>
+        <nav class="nav-links" aria-label="Main navigation">
+            <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+                <span class="nav-icon">D</span>
+                Dashboard
+            </a>
+            <a routerLink="/incidents" routerLinkActive="active">
+                <span class="nav-icon">I</span>
+                Incidents
+            </a>
+            <a routerLink="/persons" routerLinkActive="active">
+                <span class="nav-icon">P</span>
+                People
+            </a>
+        </nav>
+
+        <div class="system-card">
+            <span class="pulse"></span>
+            <div>
+                <strong>Live mode</strong>
+                <small>Auto-refresh enabled in operation screens</small>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-panel">
+        <header class="topbar">
+            <div>
+                <span class="section-label">Emergency response console</span>
+                <h1>Disaster Management System</h1>
+            </div>
+            <div class="operator-chip">
+                <span class="operator-dot"></span>
+                Control Room
+            </div>
+        </header>
+
+        <section class="content">
+            <router-outlet></router-outlet>
         </section>
-        <router-outlet></router-outlet>
-    </div>
+    </main>
 </div>
