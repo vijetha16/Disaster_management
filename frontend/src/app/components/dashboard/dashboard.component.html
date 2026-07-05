@@ -1,0 +1,62 @@
+<!-- src/app/components/dashboard/dashboard.component.html -->
+<div class="dashboard-container">
+    <h1>Disaster Management Dashboard</h1>
+    
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">📋</div>
+            <div class="stat-info">
+                <h3>Total Incidents</h3>
+                <p class="stat-number">{{ stats.totalIncidents }}</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">🔴</div>
+            <div class="stat-info">
+                <h3>Active Incidents</h3>
+                <p class="stat-number">{{ stats.activeIncidents }}</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">👥</div>
+            <div class="stat-info">
+                <h3>Total Persons</h3>
+                <p class="stat-number">{{ stats.totalPersons }}</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">🔍</div>
+            <div class="stat-info">
+                <h3>Missing Persons</h3>
+                <p class="stat-number">{{ stats.missingPersons }}</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">⚠️</div>
+            <div class="stat-info">
+                <h3>Critical Incidents</h3>
+                <p class="stat-number">{{ stats.criticalIncidents }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="active-incidents-section">
+        <h2>Recent Active Incidents</h2>
+        <div class="incident-list">
+            <div *ngFor="let incident of activeIncidents" class="incident-item">
+                <div class="incident-header">
+                    <span class="incident-type">{{ incident.type }}</span>
+                    <span class="incident-severity" [class]="getSeverityClass(incident.severity)">
+                        {{ incident.severity }}
+                    </span>
+                </div>
+                <div class="incident-details">
+                    <p><strong>Location:</strong> {{ incident.location }}</p>
+                    <p><strong>Status:</strong> {{ incident.status }}</p>
+                    <p><strong>Reported By:</strong> {{ incident.reportedBy }}</p>
+                    <p *ngIf="incident.hazardLevel"><strong>Hazard Level:</strong> {{ incident.hazardLevel | number:'1.1-1' }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
