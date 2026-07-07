@@ -1,0 +1,41 @@
+<div class="auth-page">
+    <section class="auth-panel wide">
+        <p class="eyebrow">New operator</p>
+        <h1>Create Account</h1>
+        <p class="muted">Register your response team profile for the disaster operations console.</p>
+
+        <div *ngIf="errorMessage" class="alert">{{ errorMessage }}</div>
+
+        <form class="auth-form grid" (ngSubmit)="signup()">
+            <label>
+                Full name
+                <input name="name" [(ngModel)]="account.name" placeholder="Operator name" required>
+            </label>
+            <label>
+                Email
+                <input type="email" name="email" [(ngModel)]="account.email" placeholder="name@example.com" required>
+            </label>
+            <label>
+                Password
+                <input type="password" name="password" [(ngModel)]="account.password" placeholder="At least 6 characters" required>
+            </label>
+            <label>
+                Role
+                <select name="role" [(ngModel)]="account.role">
+                    <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+                </select>
+            </label>
+            <label>
+                Phone
+                <input name="phone" [(ngModel)]="account.phone" placeholder="Contact number">
+            </label>
+            <label>
+                Base location
+                <input name="location" [(ngModel)]="account.location" placeholder="City or command center">
+            </label>
+            <button type="submit" [disabled]="loading">{{ loading ? 'Creating...' : 'Create Account' }}</button>
+        </form>
+
+        <p class="switch-link">Already have an account? <a routerLink="/signin">Sign in</a></p>
+    </section>
+</div>

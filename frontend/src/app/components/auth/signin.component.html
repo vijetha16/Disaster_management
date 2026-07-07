@@ -1,0 +1,23 @@
+<div class="auth-page">
+    <section class="auth-panel">
+        <p class="eyebrow">Operator access</p>
+        <h1>Sign In</h1>
+        <p class="muted">Use your response team account to access your profile.</p>
+
+        <div *ngIf="errorMessage" class="alert">{{ errorMessage }}</div>
+
+        <form class="auth-form" (ngSubmit)="signin()">
+            <label>
+                Email
+                <input type="email" name="email" [(ngModel)]="credentials.email" placeholder="name@example.com" required>
+            </label>
+            <label>
+                Password
+                <input type="password" name="password" [(ngModel)]="credentials.password" placeholder="Password" required>
+            </label>
+            <button type="submit" [disabled]="loading">{{ loading ? 'Signing in...' : 'Sign In' }}</button>
+        </form>
+
+        <p class="switch-link">Need an account? <a routerLink="/signup">Create one</a></p>
+    </section>
+</div>

@@ -21,6 +21,10 @@
                 <span class="nav-icon">P</span>
                 People
             </a>
+            <a routerLink="/profile" routerLinkActive="active">
+                <span class="nav-icon">U</span>
+                Profile
+            </a>
         </nav>
 
         <div class="system-card">
@@ -38,10 +42,18 @@
                 <span class="section-label">Emergency response console</span>
                 <h1>Disaster Management System</h1>
             </div>
-            <div class="operator-chip">
-                <span class="operator-dot"></span>
-                Control Room
-            </div>
+            <ng-container *ngIf="currentUser$ | async as currentUser; else guestLinks">
+                <a class="operator-chip" routerLink="/profile">
+                    <span class="operator-dot"></span>
+                    {{ currentUser.name }}
+                </a>
+            </ng-container>
+            <ng-template #guestLinks>
+                <div class="auth-links">
+                    <a routerLink="/signin">Sign In</a>
+                    <a routerLink="/signup">Sign Up</a>
+                </div>
+            </ng-template>
         </header>
 
         <section class="content">

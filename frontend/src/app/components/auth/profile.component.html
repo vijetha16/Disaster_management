@@ -1,0 +1,47 @@
+<div class="auth-page">
+    <section *ngIf="!user" class="auth-panel">
+        <p class="eyebrow">Profile</p>
+        <h1>Sign in required</h1>
+        <p class="muted">Sign in or create an account to view your response profile.</p>
+        <div class="button-row">
+            <a class="button-link" routerLink="/signin">Sign In</a>
+            <a class="button-link secondary" routerLink="/signup">Create Account</a>
+        </div>
+    </section>
+
+    <section *ngIf="user" class="auth-panel wide">
+        <div class="profile-top">
+            <div>
+                <p class="eyebrow">Operator profile</p>
+                <h1>{{ user.name }}</h1>
+                <p class="muted">{{ user.email }}</p>
+            </div>
+            <button type="button" class="secondary" (click)="signout()">Sign Out</button>
+        </div>
+
+        <div *ngIf="errorMessage" class="alert">{{ errorMessage }}</div>
+        <div *ngIf="successMessage" class="success">{{ successMessage }}</div>
+
+        <form class="auth-form grid" (ngSubmit)="saveProfile()">
+            <label>
+                Full name
+                <input name="name" [(ngModel)]="profile.name" required>
+            </label>
+            <label>
+                Role
+                <select name="role" [(ngModel)]="profile.role">
+                    <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+                </select>
+            </label>
+            <label>
+                Phone
+                <input name="phone" [(ngModel)]="profile.phone" placeholder="Contact number">
+            </label>
+            <label>
+                Base location
+                <input name="location" [(ngModel)]="profile.location" placeholder="City or command center">
+            </label>
+            <button type="submit" [disabled]="loading">{{ loading ? 'Saving...' : 'Save Profile' }}</button>
+        </form>
+    </section>
+</div>

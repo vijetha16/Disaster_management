@@ -149,6 +149,31 @@
     background: white;
     color: #334155;
     font-weight: 700;
+    text-decoration: none;
+}
+
+.auth-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.auth-links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 38px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: #2563eb;
+    color: white;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.auth-links a:first-child {
+    background: white;
+    border: 1px solid #d9e2ec;
+    color: #334155;
 }
 
 .content {
